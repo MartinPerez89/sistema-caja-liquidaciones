@@ -24,10 +24,24 @@ app = FastAPI(
     description="Sistema consistente y estable conforme a especificación funcional inicial de requerimientos (RF-01 a RF-13 y RN-01 a RN-10)."
 )
 
-# CORS para permitir el frontend en desarrollo
+# Configuración de CORS con Vercel y entornos locales
+allowed_origins = [
+    "https://sistema-caja-liquidaciones.vercel.app",
+    "https://sistema-caja-liquidaciones.vercel.app/",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
+extra_origins = os.getenv("ALLOWED_ORIGINS")
+if extra_origins:
+    allowed_origins.extend([o.strip() for o in extra_origins.split(",") if o.strip()])
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
+    allow_origin_regex=r"https:\/\/sistema-caja-liquidaciones.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
