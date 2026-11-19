@@ -12,7 +12,10 @@ import {
   AuditItem
 } from './types';
 
-const BASE_URL = '/api';
+const envApiUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : '';
+export const BASE_URL = envApiUrl ? `${envApiUrl}/api` : '/api';
+
+export const getExcelDownloadUrl = (weekId: number) => `${BASE_URL}/reports/excel/${weekId}`;
 
 export async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${url}`, {

@@ -3,7 +3,8 @@ import { Week, AuditItem } from '../types';
 import {
   getAuditTrail,
   getWeekById,
-  formatARS
+  formatARS,
+  getExcelDownloadUrl
 } from '../api';
 import {
   FileSpreadsheet,
@@ -58,7 +59,7 @@ export const HistoryReportsView: React.FC<HistoryReportsViewProps> = ({
 
   const handleDownloadExcel = () => {
     if (!currentWeek) return;
-    window.open(`/api/reports/excel/${currentWeek.id}`, '_blank');
+    window.open(getExcelDownloadUrl(currentWeek.id), '_blank');
   };
 
   const handlePrint = () => {
