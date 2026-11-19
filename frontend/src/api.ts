@@ -12,8 +12,10 @@ import {
   AuditItem
 } from './types';
 
-const envApiUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : '';
-export const BASE_URL = envApiUrl ? `${envApiUrl}/api` : '/api';
+let rawApiUrl = (import.meta.env.VITE_API_URL || '').trim();
+if (rawApiUrl.endsWith('/')) rawApiUrl = rawApiUrl.slice(0, -1);
+if (rawApiUrl.endsWith('/api')) rawApiUrl = rawApiUrl.slice(0, -4);
+export const BASE_URL = rawApiUrl ? `${rawApiUrl}/api` : '/api';
 
 export const getExcelDownloadUrl = (weekId: number) => `${BASE_URL}/reports/excel/${weekId}`;
 
