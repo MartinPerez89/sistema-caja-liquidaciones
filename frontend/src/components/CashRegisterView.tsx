@@ -208,10 +208,10 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Barra superior con acciones de alta */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
         <div>
-          <h2 className="text-lg font-bold text-slate-900">Libro Diario de Caja</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Libro Diario de Caja</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Registro cronológico de ingresos, egresos, adelantos y gastos operativos
           </p>
         </div>
@@ -220,7 +220,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
           <button
             onClick={() => handleOpenModal('INGRESO')}
             disabled={currentWeek?.status === 'CLOSED'}
-            className="flex items-center space-x-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-sm transition-all"
+            className="flex items-center space-x-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-sm transition-all cursor-pointer disabled:cursor-not-allowed"
           >
             <ArrowUpRight className="w-4 h-4" />
             <span>+ Ingreso</span>
@@ -228,7 +228,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
           <button
             onClick={() => handleOpenModal('EGRESO')}
             disabled={currentWeek?.status === 'CLOSED'}
-            className="flex items-center space-x-1.5 px-3 py-2 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-sm transition-all"
+            className="flex items-center space-x-1.5 px-3 py-2 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-sm transition-all cursor-pointer disabled:cursor-not-allowed"
           >
             <ArrowDownLeft className="w-4 h-4" />
             <span>- Egreso</span>
@@ -237,8 +237,8 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
       </div>
 
       {/* Filtros */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center gap-3 text-xs">
-        <div className="flex items-center space-x-1 text-slate-500 font-semibold mr-1">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap items-center gap-3 text-xs transition-colors">
+        <div className="flex items-center space-x-1 text-slate-500 dark:text-slate-400 font-semibold mr-1">
           <Filter className="w-3.5 h-3.5" />
           <span>Filtros:</span>
         </div>
@@ -247,7 +247,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="border border-slate-200 rounded-md px-2.5 py-1.5 bg-slate-50 text-slate-700 font-medium focus:ring-1 focus:ring-emerald-500"
+            className="border border-slate-200 dark:border-slate-700 rounded-md px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium focus:ring-1 focus:ring-emerald-500"
           >
             <option value="ALL">Todos los tipos</option>
             <option value="INGRESO">Solo Ingresos</option>
@@ -259,7 +259,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
           <select
             value={filterFundSource}
             onChange={(e) => setFilterFundSource(e.target.value)}
-            className="border border-slate-200 rounded-md px-2.5 py-1.5 bg-slate-50 text-slate-700 font-medium focus:ring-1 focus:ring-emerald-500"
+            className="border border-slate-200 dark:border-slate-700 rounded-md px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium focus:ring-1 focus:ring-emerald-500"
           >
             <option value="ALL">Cualquier origen</option>
             <option value="CAJA">Solo Caja</option>
@@ -271,7 +271,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="border border-slate-200 rounded-md px-2.5 py-1.5 bg-slate-50 text-slate-700 font-medium focus:ring-1 focus:ring-emerald-500"
+            className="border border-slate-200 dark:border-slate-700 rounded-md px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium focus:ring-1 focus:ring-emerald-500"
           >
             <option value="ALL">Todas las categorías</option>
             {categories.map((c) => (
@@ -282,7 +282,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
           </select>
         </div>
 
-        <label className="flex items-center space-x-1.5 ml-auto text-slate-600 cursor-pointer">
+        <label className="flex items-center space-x-1.5 ml-auto text-slate-600 dark:text-slate-300 cursor-pointer">
           <input
             type="checkbox"
             checked={showCancelled}
@@ -294,11 +294,11 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
       </div>
 
       {/* Tabla cronológica de movimientos (RF-01) */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 uppercase font-semibold text-[11px] tracking-wider">
+              <tr className="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 uppercase font-semibold text-[11px] tracking-wider">
                 <th className="py-3 px-4">Fecha</th>
                 <th className="py-3 px-4">Tipo</th>
                 <th className="py-3 px-4">Concepto / Referencia</th>
@@ -308,10 +308,10 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                 <th className="py-3 px-4 text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
               {filteredMovements.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                  <td colSpan={7} className="py-8 text-center text-slate-400 dark:text-slate-500">
                     No hay movimientos registrados para los filtros seleccionados
                   </td>
                 </tr>
@@ -321,42 +321,42 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                   return (
                     <tr
                       key={m.id}
-                      className={`hover:bg-slate-50/80 transition-colors ${
-                        isAnulado ? 'bg-slate-50/40 opacity-60' : ''
+                      className={`hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors ${
+                        isAnulado ? 'bg-slate-50/40 dark:bg-slate-800/20 opacity-60' : ''
                       }`}
                     >
-                      <td className="py-3 px-4 whitespace-nowrap text-slate-600 font-medium">
+                      <td className="py-3 px-4 whitespace-nowrap text-slate-600 dark:text-slate-400 font-medium">
                         {m.date}
                       </td>
                       <td className="py-3 px-4 whitespace-nowrap">
                         <span
                           className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
                             m.type === 'INGRESO'
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-rose-100 text-rose-800'
+                              ? 'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 dark:border dark:border-emerald-800/40'
+                              : 'bg-rose-100 dark:bg-rose-950/70 text-rose-800 dark:text-rose-300 dark:border dark:border-rose-800/40'
                           }`}
                         >
                           {m.type}
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        <div className="font-semibold text-slate-800">
-                          {isAnulado && <span className="text-rose-600 font-bold mr-1">[ANULADO]</span>}
+                        <div className="font-semibold text-slate-800 dark:text-slate-200">
+                          {isAnulado && <span className="text-rose-600 dark:text-rose-400 font-bold mr-1">[ANULADO]</span>}
                           {m.concept}
                         </div>
                         {m.employee_name && (
-                          <div className="text-[11px] text-slate-500">
-                            Empleado: <span className="font-medium text-slate-700">{m.employee_name}</span>
+                          <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                            Empleado: <span className="font-medium text-slate-700 dark:text-slate-300">{m.employee_name}</span>
                           </div>
                         )}
                         {isAnulado && m.cancelled_reason && (
-                          <div className="text-[10px] text-rose-600 italic mt-0.5">
+                          <div className="text-[10px] text-rose-600 dark:text-rose-400 italic mt-0.5">
                             Motivo anulación: {m.cancelled_reason} (por {m.cancelled_by || 'Admin'})
                           </div>
                         )}
                       </td>
                       <td className="py-3 px-4 whitespace-nowrap">
-                        <span className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded text-[11px]">
+                        <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded text-[11px]">
                           {m.category}
                         </span>
                       </td>
@@ -364,8 +364,8 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                         <span
                           className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${
                             m.fund_source === 'CAJA'
-                              ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                              : 'bg-amber-50 text-amber-700 border border-amber-200'
+                              ? 'bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/50'
+                              : 'bg-amber-50 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50'
                           }`}
                         >
                           {m.fund_source === 'CAJA' ? 'Caja Operativa' : 'Fondos Externos'}
@@ -373,7 +373,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                       </td>
                       <td
                         className={`py-3 px-4 text-right whitespace-nowrap font-bold text-sm ${
-                          m.type === 'INGRESO' ? 'text-emerald-600' : 'text-rose-600'
+                          m.type === 'INGRESO' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
                         } ${isAnulado ? 'line-through' : ''}`}
                       >
                         {m.type === 'INGRESO' ? '+' : '-'} {formatARS(m.amount)}
@@ -388,7 +388,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                             }}
                             disabled={currentWeek?.status === 'CLOSED'}
                             title="Anular movimiento conservando trazabilidad"
-                            className="p-1 text-slate-400 hover:text-rose-600 rounded hover:bg-rose-50 transition-colors disabled:opacity-30"
+                            className="p-1 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors disabled:opacity-30 cursor-pointer"
                           >
                             <Ban className="w-4 h-4" />
                           </button>
@@ -405,12 +405,12 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
 
       {/* Modal Alta de Movimiento */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-in fade-in duration-150">
-            <h3 className="text-base font-bold text-slate-900 mb-1">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 animate-in fade-in duration-150">
+            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">
               Registrar {formData.type === 'INGRESO' ? 'Ingreso' : 'Egreso'} de Fondos
             </h3>
-            <p className="text-xs text-slate-500 mb-4">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
               Complete los datos del movimiento. Se validará contra duplicados (RF-01).
             </p>
 
@@ -418,19 +418,19 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <label className="block text-slate-700 font-semibold">Fecha</label>
-                    <span className="text-[10px] text-emerald-600 font-medium">Predeterminada hoy (editable)</span>
+                    <label className="block text-slate-700 dark:text-slate-300 font-semibold">Fecha</label>
+                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">Predeterminada hoy (editable)</span>
                   </div>
                   <input
                     type="date"
                     required
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 font-medium text-slate-800"
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 font-medium text-slate-800 dark:text-slate-100"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Importe ($ ARS)</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Importe ($ ARS)</label>
                   <input
                     type="number"
                     step="0.01"
@@ -440,13 +440,13 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                     value={formData.amount}
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                     onBlur={handleCheckDuplicate}
-                    className="w-full border border-slate-300 rounded-lg p-2 font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500"
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg p-2 font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Concepto</label>
+                <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Concepto</label>
                 <input
                   type="text"
                   required
@@ -454,17 +454,17 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                   value={formData.concept}
                   onChange={(e) => setFormData({ ...formData, concept: e.target.value })}
                   onBlur={handleCheckDuplicate}
-                  className="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
+                  className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg p-2 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Categoría</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Categoría</label>
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
                   >
                     {categories
                       .filter((c) => c.type === formData.type)
@@ -477,7 +477,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Origen de Fondos</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Origen de Fondos</label>
                   <select
                     value={formData.fund_source}
                     onChange={(e) =>
@@ -486,7 +486,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                         fund_source: e.target.value as 'CAJA' | 'FONDOS_EXTERNOS',
                       })
                     }
-                    className="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 font-semibold"
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 font-semibold"
                   >
                     <option value="CAJA">Caja Operativa (Modifica saldo)</option>
                     <option value="FONDOS_EXTERNOS">Fondos Externos (No toca caja)</option>
@@ -497,7 +497,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
               {/* Si es adelanto o pago, vincular empleado */}
               {(formData.category === 'Adelanto' || formData.category.includes('Pago')) && (
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
                     Empleado Asociado
                   </label>
                   <select
@@ -509,7 +509,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                         related_entity_id: e.target.value,
                       })
                     }
-                    className="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
                   >
                     <option value="">Seleccione empleado...</option>
                     {employees.map((emp) => (
@@ -522,20 +522,20 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
               )}
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Observaciones</label>
+                <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Observaciones</label>
                 <textarea
                   rows={2}
                   placeholder="Detalles adicionales opcionales..."
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
+                  className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
               {/* Alerta de Duplicado (RF-01) */}
               {duplicateWarning && (
-                <div className="bg-amber-50 border border-amber-300 rounded-lg p-3 text-amber-900 flex items-start space-x-2">
-                  <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <div className="bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700/60 rounded-lg p-3 text-amber-900 dark:text-amber-200 flex items-start space-x-2">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                   <div>
                     <h5 className="font-bold">Advertencia de posible duplicado (RF-01)</h5>
                     <p className="text-[11px] mt-0.5">
@@ -548,17 +548,17 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                 </div>
               )}
 
-              <div className="flex justify-end space-x-2 pt-3 border-t border-slate-100">
+              <div className="flex justify-end space-x-2 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 font-medium"
+                  className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className={`px-4 py-2 rounded-lg text-white font-bold transition-colors ${
+                  className={`px-4 py-2 rounded-lg text-white font-bold transition-colors cursor-pointer ${
                     duplicateWarning && !confirmDuplicateProceed
                       ? 'bg-amber-600 hover:bg-amber-700'
                       : 'bg-emerald-600 hover:bg-emerald-700'
@@ -574,24 +574,24 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
 
       {/* Modal de Anulación con Motivo Obligatorio (RN-10) */}
       {cancelModalOpen && movementToCancel && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
-            <div className="flex items-center space-x-2 text-rose-600 mb-2">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center space-x-2 text-rose-600 dark:text-rose-400 mb-2">
               <AlertTriangle className="w-5 h-5" />
-              <h3 className="text-base font-bold">Anulación de Movimiento #{movementToCancel.id}</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">Anulación de Movimiento #{movementToCancel.id}</h3>
             </div>
-            <p className="text-xs text-slate-600 mb-4">
+            <p className="text-xs text-slate-600 dark:text-slate-400 mb-4">
               Por norma de consistencia y auditoría (RF-01, RN-10), la anulación no borra el registro físico y requiere motivo explícito.
             </p>
 
-            <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs mb-4">
+            <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-lg border border-slate-200 dark:border-slate-800 text-xs mb-4 text-slate-700 dark:text-slate-300">
               <div><strong>Concepto:</strong> {movementToCancel.concept}</div>
               <div><strong>Fecha:</strong> {movementToCancel.date}</div>
               <div><strong>Importe:</strong> {formatARS(movementToCancel.amount)} ({movementToCancel.type})</div>
             </div>
 
             <div className="space-y-2 mb-4 text-xs">
-              <label className="block text-slate-700 font-semibold">
+              <label className="block text-slate-700 dark:text-slate-300 font-semibold">
                 Motivo de la anulación (Obligatorio)
               </label>
               <textarea
@@ -600,7 +600,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                 placeholder="Indique claramente por qué se anula este movimiento..."
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
-                className="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-rose-500"
+                className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-lg p-2 focus:ring-2 focus:ring-rose-500"
               />
             </div>
 
@@ -608,14 +608,14 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
               <button
                 type="button"
                 onClick={() => setCancelModalOpen(false)}
-                className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 text-xs font-semibold"
+                className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-semibold cursor-pointer"
               >
                 Volver
               </button>
               <button
                 type="button"
                 onClick={handleConfirmCancel}
-                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold shadow-sm"
+                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold shadow-sm cursor-pointer"
               >
                 Confirmar Anulación
               </button>

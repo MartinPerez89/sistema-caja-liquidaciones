@@ -17,7 +17,25 @@ export function App() {
   const [currentWeek, setCurrentWeek] = useState<Week | null>(null);
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [userRole, setUserRole] = useState<'Administrador' | 'Operador'>('Administrador');
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('theme') : null;
+    return saved === 'light' ? 'light' : 'dark'; // Por defecto TEMA OSCURO
+  });
   const [loading, setLoading] = useState<boolean>(true);
+
+  // Sincronizar clase .dark en el documento raíz
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   // Puente para abrir modal de pagos desde liquidación
   const [preselectedLiqForPayment, setPreselectedLiqForPayment] = useState<Liquidation | null>(null);
@@ -77,17 +95,17 @@ export function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-100 dark:bg-slate-950 flex items-center justify-center">
         <div className="text-center space-y-3">
           <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-semibold text-slate-600">Cargando sistema de caja y liquidaciones...</p>
+          <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">Cargando sistema de caja y liquidaciones...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-100/70 text-slate-900 flex flex-col">
+    <div className="min-h-screen bg-slate-100/70 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-200">
       <Navbar
         currentWeek={currentWeek}
         weeks={weeks}
@@ -97,6 +115,8 @@ export function App() {
         onSelectTab={setActiveTab}
         userRole={userRole}
         onToggleRole={handleToggleRole}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">

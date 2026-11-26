@@ -11,7 +11,9 @@ import {
   Lock,
   FileSpreadsheet,
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -23,6 +25,8 @@ interface NavbarProps {
   onSelectTab: (tab: string) => void;
   userRole: 'Administrador' | 'Operador';
   onToggleRole: () => void;
+  theme: 'dark' | 'light';
+  onToggleTheme: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -34,6 +38,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSelectTab,
   userRole,
   onToggleRole,
+  theme,
+  onToggleTheme,
 }) => {
   const currentCash = currentWeek?.balance?.current_cash ?? 0;
   const isClosed = currentWeek?.status === 'CLOSED';
@@ -106,6 +112,25 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>{userRole}</span>
+            </button>
+
+            {/* Switch de Tema Claro / Oscuro (por defecto OSCURO) */}
+            <button
+              onClick={onToggleTheme}
+              title={theme === 'dark' ? 'Cambiar a Tema Claro' : 'Cambiar a Tema Oscuro'}
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-700 bg-slate-800/80 text-slate-200 hover:bg-slate-700/80 hover:text-white transition-all cursor-pointer shadow-xs"
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Moon className="w-3.5 h-3.5 text-indigo-400" />
+                  <span className="hidden md:inline text-[11px] font-medium">Oscuro</span>
+                </>
+              ) : (
+                <>
+                  <Sun className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="hidden md:inline text-[11px] font-medium">Claro</span>
+                </>
+              )}
             </button>
           </div>
         </div>
