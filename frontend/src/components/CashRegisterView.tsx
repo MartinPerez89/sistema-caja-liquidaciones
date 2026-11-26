@@ -42,7 +42,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
   const [filterType, setFilterType] = useState<string>('ALL');
   const [filterCategory, setFilterCategory] = useState<string>('ALL');
   const [filterFundSource, setFilterFundSource] = useState<string>('ALL');
-  const [showCancelled, setShowCancelled] = useState<boolean>(true);
+  const [showCancelled, setShowCancelled] = useState<boolean>(false);
 
   // Formulario nuevo movimiento
   const [showModal, setShowModal] = useState(false);
