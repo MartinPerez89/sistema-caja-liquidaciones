@@ -93,22 +93,33 @@ def create_movement(payload: MovementCreate):
     with get_db() as conn:
         cursor = conn.cursor()
         
-        # Verificar estado de la semana
-        cursor.execute("SELECT status FROM weeks WHERE id = ?", (payload.week_id,))
-        week = cursor.fetchone()
-        if not week:
-            raise HTTPException(status_code=404, detail="Semana no encontrada")
-        if week["status"] == "CLOSED":
-            raise HTTPException(status_code=400, detail="No se pueden registrar movimientos en una semana cerrada")
+        # Asignar la semana correspondiente a la fecha del movimiento (RN-01)
+        target_week_id = payload.week_id
+        cursor.execute("""
+            SELECT id, status FROM weeks 
+            WHERE ? BETWEEN start_date AND end_date
+        """, (payload.date,))
+        matched_week = cursor.fetchone()
+        if matched_week:
+            target_week_id = matched_week["id"]
+            if matched_week["status"] == "CLOSED":
+                raise HTTPException(status_code=400, detail=f"La semana correspondiente a la fecha {payload.date} está cerrada")
+        else:
+            cursor.execute("SELECT status FROM weeks WHERE id = ?", (payload.week_id,))
+            week = cursor.fetchone()
+            if not week:
+                raise HTTPException(status_code=404, detail="Semana no encontrada")
+            if week["status"] == "CLOSED":
+                raise HTTPException(status_code=400, detail="No se pueden registrar movimientos en una semana cerrada")
 
-        # Inserción
+        # Inserción con la fecha seleccionada y editable por el usuario
         cursor.execute("""
             INSERT INTO movements (
                 week_id, date, type, amount, concept, category, 
                 fund_source, related_entity_type, related_entity_id, notes
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            payload.week_id,
+            target_week_id,
             payload.date,
             payload.type,
             round_money(payload.amount),
@@ -124,12 +135,14 @@ def create_movement(payload: MovementCreate):
         # Auditoría
         log_audit(
             conn, payload.user, "CREATE_MOVEMENT", "movements", str(new_id),
-            None, payload.dict(), f"Alta de movimiento {payload.type}: ${payload.amount} ({payload.category})"
+            None, payload.dict(), f"Alta de movimiento {payload.type}: ${payload.amount} ({payload.category}) - Fecha: {payload.date}"
         )
 
         # Si es un adelanto o pago a empleado, sincronizar liquidaciones
         if payload.category in ['Adelanto', 'Pago semanal', 'Pago del día'] or payload.related_entity_type == 'EMPLEADO':
-            sync_all_weekly_liquidations(conn, payload.week_id)
+            sync_all_weekly_liquidations(conn, target_week_id)
+            if target_week_id != payload.week_id:
+                sync_all_weekly_liquidations(conn, payload.week_id)
 
         return {"id": new_id, "message": "Movimiento registrado con éxito"}
 
@@ -148,10 +161,12 @@ def update_movement(movement_id: int, payload: MovementUpdate):
             raise HTTPException(status_code=400, detail="No se puede modificar un movimiento que ya fue anulado")
 
         old_data = dict(old_row)
+        target_date = payload.date if payload.date else old_data["date"]
 
         cursor.execute("""
             UPDATE movements
-            SET amount = ?,
+            SET date = ?,
+                amount = ?,
                 concept = ?,
                 category = ?,
                 fund_source = ?,
@@ -161,6 +176,7 @@ def update_movement(movement_id: int, payload: MovementUpdate):
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
         """, (
+            target_date,
             round_money(payload.amount),
             payload.concept.strip(),
             payload.category,

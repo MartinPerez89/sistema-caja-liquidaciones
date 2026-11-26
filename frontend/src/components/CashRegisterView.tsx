@@ -7,7 +7,8 @@ import {
   checkDuplicateMovement,
   getCategories,
   getEmployees,
-  formatARS
+  formatARS,
+  getTodayDate
 } from '../api';
 import {
   PlusCircle,
@@ -46,7 +47,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
   // Formulario nuevo movimiento
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
-    date: currentWeek?.start_date || new Date().toISOString().slice(0, 10),
+    date: getTodayDate(),
     type: 'EGRESO' as 'INGRESO' | 'EGRESO',
     amount: '',
     category: 'Compra',
@@ -87,18 +88,12 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
 
   useEffect(() => {
     loadData();
-    if (currentWeek) {
-      setFormData((prev) => ({
-        ...prev,
-        date: currentWeek.start_date,
-      }));
-    }
   }, [currentWeek, showCancelled]);
 
   const handleOpenModal = (defaultType: 'INGRESO' | 'EGRESO') => {
     const defaultCat = defaultType === 'INGRESO' ? 'Ingreso diario' : 'Compra';
     setFormData({
-      date: currentWeek?.start_date || new Date().toISOString().slice(0, 10),
+      date: getTodayDate(),
       type: defaultType,
       amount: '',
       category: defaultCat,
@@ -422,13 +417,16 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
             <form onSubmit={handleSubmitMovement} className="space-y-4 text-xs">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Fecha</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-slate-700 font-semibold">Fecha</label>
+                    <span className="text-[10px] text-emerald-600 font-medium">Predeterminada hoy (editable)</span>
+                  </div>
                   <input
                     type="date"
                     required
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
+                    className="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 font-medium text-slate-800"
                   />
                 </div>
                 <div>

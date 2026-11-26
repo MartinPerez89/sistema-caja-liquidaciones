@@ -5,7 +5,8 @@ import {
   createSalaryPayment,
   cancelPayment,
   getWeekLiquidations,
-  formatARS
+  formatARS,
+  getTodayDate
 } from '../api';
 import {
   CreditCard,
@@ -41,7 +42,7 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({
   const [showModal, setShowModal] = useState(false);
   const [paymentForm, setPaymentForm] = useState({
     liquidation_id: '',
-    date: currentWeek?.start_date || new Date().toISOString().slice(0, 10),
+    date: getTodayDate(),
     amount: '',
     fund_source: 'CAJA' as 'CAJA' | 'FONDOS_EXTERNOS',
     notes: '',
@@ -78,7 +79,7 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({
     if (preselectedLiquidation && preselectedLiquidation.liquidation_id) {
       setPaymentForm({
         liquidation_id: preselectedLiquidation.liquidation_id.toString(),
-        date: currentWeek?.start_date || new Date().toISOString().slice(0, 10),
+        date: getTodayDate(),
         amount: preselectedLiquidation.remaining_debt.toString(),
         fund_source: 'CAJA',
         notes: `Pago semanal - ${preselectedLiquidation.employee_name}`,
@@ -92,7 +93,7 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({
     const defaultLiq = liquidations.find((l) => l.remaining_debt > 0);
     setPaymentForm({
       liquidation_id: defaultLiq?.liquidation_id?.toString() || '',
-      date: currentWeek?.start_date || new Date().toISOString().slice(0, 10),
+      date: getTodayDate(),
       amount: defaultLiq?.remaining_debt?.toString() || '',
       fund_source: 'CAJA',
       notes: defaultLiq ? `Pago a ${defaultLiq.employee_name}` : '',

@@ -16,6 +16,7 @@ class MovementCreate(BaseModel):
     user: str = "Operador"
 
 class MovementUpdate(BaseModel):
+    date: Optional[str] = None
     amount: float = Field(gt=0)
     concept: str
     category: str

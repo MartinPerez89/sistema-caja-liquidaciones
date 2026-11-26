@@ -5,7 +5,8 @@ import {
   reopenWeek,
   getWeekExtractions,
   createExtraction,
-  formatARS
+  formatARS,
+  getTodayDate
 } from '../api';
 import {
   Lock,
@@ -39,7 +40,7 @@ export const ClosureView: React.FC<ClosureViewProps> = ({
   // Extracción
   const [showExtractionModal, setShowExtractionModal] = useState(false);
   const [extractionForm, setExtractionForm] = useState({
-    date: currentWeek?.start_date || new Date().toISOString().slice(0, 10),
+    date: getTodayDate(),
     extraction_type: 'PARCIAL' as 'PARCIAL' | 'TOTAL',
     amount: '',
     destination: 'Dueño / Retiro de utilidades',
@@ -80,7 +81,7 @@ export const ClosureView: React.FC<ClosureViewProps> = ({
 
   const handleOpenExtraction = (type: 'PARCIAL' | 'TOTAL') => {
     setExtractionForm({
-      date: currentWeek?.start_date || new Date().toISOString().slice(0, 10),
+      date: getTodayDate(),
       extraction_type: type,
       amount: type === 'TOTAL' ? balance.current_cash.toString() : '',
       destination: 'Retiro de utilidades / Caja fuerte',

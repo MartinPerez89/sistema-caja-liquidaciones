@@ -122,6 +122,14 @@ export const getAuditTrail = (limit = 100, user?: string, entity_type?: string) 
 };
 
 // Formato de moneda ARS
+export const getTodayDate = (): string => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export const formatARS = (amount: number | null | undefined): string => {
   if (amount === null || amount === undefined || isNaN(amount)) return '$0,00';
   return new Intl.NumberFormat('es-AR', {
