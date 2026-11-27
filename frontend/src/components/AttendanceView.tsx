@@ -7,7 +7,9 @@ import {
   createShiftCoverage,
   deleteShiftCoverage,
   getEmployees,
-  formatARS
+  formatARS,
+  formatCurrencyInput,
+  parseCurrencyInput
 } from '../api';
 import {
   CalendarCheck,
@@ -78,8 +80,8 @@ export const AttendanceView: React.FC<AttendanceViewProps> = ({
           date: currentWeek.start_date,
           absent_employee_id: erica ? erica.id.toString() : empData[0].id.toString(),
           covering_employee_id: ariel ? ariel.id.toString() : empData[1].id.toString(),
-          absent_discount: '42000',
-          covering_addition: '38500',
+          absent_discount: '42.000',
+          covering_addition: '38.500',
         }));
       }
     } catch (err: any) {
@@ -180,8 +182,8 @@ export const AttendanceView: React.FC<AttendanceViewProps> = ({
         absent_employee_id: Number(coverageForm.absent_employee_id),
         covering_employee_id: Number(coverageForm.covering_employee_id),
         shift_name: coverageForm.shift_name,
-        absent_discount: coverageForm.absent_discount ? parseFloat(coverageForm.absent_discount) : undefined,
-        covering_addition: coverageForm.covering_addition ? parseFloat(coverageForm.covering_addition) : undefined,
+        absent_discount: coverageForm.absent_discount ? parseCurrencyInput(coverageForm.absent_discount) : undefined,
+        covering_addition: coverageForm.covering_addition ? parseCurrencyInput(coverageForm.covering_addition) : undefined,
         notes: coverageForm.notes,
         user: userRole,
       });
@@ -453,30 +455,36 @@ export const AttendanceView: React.FC<AttendanceViewProps> = ({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
-                    Descuento al Ausente ($)
+                    Descuento al Ausente ($ ARS)
                   </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    placeholder="Ej: 42000"
-                    value={coverageForm.absent_discount}
-                    onChange={(e) => setCoverageForm({ ...coverageForm, absent_discount: e.target.value })}
-                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
-                  />
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-slate-400 dark:text-slate-500 font-bold text-xs select-none">$</span>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="Ej: 42.000"
+                      value={coverageForm.absent_discount}
+                      onChange={(e) => setCoverageForm({ ...coverageForm, absent_discount: formatCurrencyInput(e.target.value) })}
+                      className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-lg p-2 pl-7 focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
                 </div>
 
                 <div>
                   <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">
-                    Adicional al que Cubre ($)
+                    Adicional al que Cubre ($ ARS)
                   </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    placeholder="Ej: 38500"
-                    value={coverageForm.covering_addition}
-                    onChange={(e) => setCoverageForm({ ...coverageForm, covering_addition: e.target.value })}
-                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500"
-                  />
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-slate-400 dark:text-slate-500 font-bold text-xs select-none">$</span>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="Ej: 38.500"
+                      value={coverageForm.covering_addition}
+                      onChange={(e) => setCoverageForm({ ...coverageForm, covering_addition: formatCurrencyInput(e.target.value) })}
+                      className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded-lg p-2 pl-7 focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
                 </div>
               </div>
 

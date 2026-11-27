@@ -6,7 +6,9 @@ import {
   cancelPayment,
   getWeekLiquidations,
   formatARS,
-  getTodayDate
+  getTodayDate,
+  formatCurrencyInput,
+  parseCurrencyInput
 } from '../api';
 import {
   CreditCard,
@@ -80,7 +82,7 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({
       setPaymentForm({
         liquidation_id: preselectedLiquidation.liquidation_id.toString(),
         date: getTodayDate(),
-        amount: preselectedLiquidation.remaining_debt.toString(),
+        amount: formatCurrencyInput(preselectedLiquidation.remaining_debt),
         fund_source: 'CAJA',
         notes: `Pago semanal - ${preselectedLiquidation.employee_name}`,
       });
@@ -94,7 +96,7 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({
     setPaymentForm({
       liquidation_id: defaultLiq?.liquidation_id?.toString() || '',
       date: getTodayDate(),
-      amount: defaultLiq?.remaining_debt?.toString() || '',
+      amount: defaultLiq ? formatCurrencyInput(defaultLiq.remaining_debt) : '',
       fund_source: 'CAJA',
       notes: defaultLiq ? `Pago a ${defaultLiq.employee_name}` : '',
     });
@@ -106,14 +108,14 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({
     setPaymentForm((prev) => ({
       ...prev,
       liquidation_id: liqIdStr,
-      amount: selected ? selected.remaining_debt.toString() : '',
+      amount: selected ? formatCurrencyInput(selected.remaining_debt) : '',
       notes: selected ? `Pago a ${selected.employee_name}` : '',
     }));
   };
 
   const handleSubmitPayment = async (e: React.FormEvent) => {
     e.preventDefault();
-    const amountNum = parseFloat(paymentForm.amount);
+    const amountNum = parseCurrencyInput(paymentForm.amount);
     if (isNaN(amountNum) || amountNum <= 0) {
       alert('Por favor ingrese un importe válido mayor a cero');
       return;
@@ -354,16 +356,19 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Importe a Pagar ($)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0.01"
-                    required
-                    value={paymentForm.amount}
-                    onChange={(e) => setPaymentForm({ ...paymentForm, amount: e.target.value })}
-                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg p-2 font-bold focus:ring-2 focus:ring-emerald-500"
-                  />
+                  <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Importe a Pagar ($ ARS)</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-slate-400 dark:text-slate-500 font-bold text-xs select-none">$</span>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      required
+                      placeholder="0"
+                      value={paymentForm.amount}
+                      onChange={(e) => setPaymentForm({ ...paymentForm, amount: formatCurrencyInput(e.target.value) })}
+                      className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg p-2 pl-7 font-bold focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
                 </div>
               </div>
 

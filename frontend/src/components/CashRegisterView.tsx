@@ -8,7 +8,9 @@ import {
   getCategories,
   getEmployees,
   formatARS,
-  getTodayDate
+  getTodayDate,
+  formatCurrencyInput,
+  parseCurrencyInput
 } from '../api';
 import {
   PlusCircle,
@@ -109,12 +111,13 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
   };
 
   const handleCheckDuplicate = async () => {
-    if (!currentWeek || !formData.amount || !formData.concept) return;
+    const amountNum = parseCurrencyInput(formData.amount);
+    if (!currentWeek || !amountNum || !formData.concept) return;
     const checkPayload = {
       week_id: currentWeek.id,
       date: formData.date,
       type: formData.type,
-      amount: parseFloat(formData.amount),
+      amount: amountNum,
       concept: formData.concept,
       category: formData.category,
       fund_source: formData.fund_source,
@@ -137,7 +140,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
   const handleSubmitMovement = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentWeek) return;
-    const amountNum = parseFloat(formData.amount);
+    const amountNum = parseCurrencyInput(formData.amount);
     if (isNaN(amountNum) || amountNum <= 0) {
       alert('Por favor ingrese un importe válido mayor a cero');
       return;
@@ -431,17 +434,19 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                 </div>
                 <div>
                   <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Importe ($ ARS)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0.01"
-                    required
-                    placeholder="0.00"
-                    value={formData.amount}
-                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                    onBlur={handleCheckDuplicate}
-                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg p-2 font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
-                  />
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-slate-400 dark:text-slate-500 font-bold text-xs select-none">$</span>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      required
+                      placeholder="0"
+                      value={formData.amount}
+                      onChange={(e) => setFormData({ ...formData, amount: formatCurrencyInput(e.target.value) })}
+                      onBlur={handleCheckDuplicate}
+                      className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg p-2 pl-7 font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -539,7 +544,7 @@ export const CashRegisterView: React.FC<CashRegisterViewProps> = ({
                   <div>
                     <h5 className="font-bold">Advertencia de posible duplicado (RF-01)</h5>
                     <p className="text-[11px] mt-0.5">
-                      Existe ya un movimiento en la misma fecha ({formData.date}) por importe de ${formData.amount}.
+                      Existe ya un movimiento en la misma fecha ({formData.date}) por importe de {formatARS(parseCurrencyInput(formData.amount))}.
                     </p>
                     <p className="text-[11px] font-semibold mt-1">
                       ¿Confirma que desea registrar este movimiento duplicado?

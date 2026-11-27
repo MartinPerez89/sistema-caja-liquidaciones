@@ -5,7 +5,9 @@ import {
   createEmployee,
   updateEmployee,
   getEmployeeSalaryHistory,
-  formatARS
+  formatARS,
+  formatCurrencyInput,
+  parseCurrencyInput
 } from '../api';
 import {
   Users,
@@ -83,7 +85,7 @@ export const EmployeesView: React.FC<EmployeesViewProps> = ({ userRole, onRefres
     setSelectedEmpId(emp.id);
     setFormData({
       name: emp.name,
-      weekly_salary: emp.weekly_salary.toString(),
+      weekly_salary: formatCurrencyInput(emp.weekly_salary),
       reference_days: emp.reference_days.toString(),
       habitual_shift: emp.habitual_shift || 'General',
       active: emp.active,
@@ -106,7 +108,7 @@ export const EmployeesView: React.FC<EmployeesViewProps> = ({ userRole, onRefres
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const salaryNum = parseFloat(formData.weekly_salary);
+    const salaryNum = parseCurrencyInput(formData.weekly_salary);
     const refDaysNum = parseInt(formData.reference_days, 10);
     if (isNaN(salaryNum) || salaryNum <= 0) {
       alert('Ingrese un sueldo semanal válido mayor a cero');
@@ -263,15 +265,18 @@ export const EmployeesView: React.FC<EmployeesViewProps> = ({ userRole, onRefres
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Sueldo Semanal ($ ARS)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="1"
-                    required
-                    value={formData.weekly_salary}
-                    onChange={(e) => setFormData({ ...formData, weekly_salary: e.target.value })}
-                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg p-2 font-bold focus:ring-2 focus:ring-emerald-500"
-                  />
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-slate-400 dark:text-slate-500 font-bold text-xs select-none">$</span>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      required
+                      placeholder="0"
+                      value={formData.weekly_salary}
+                      onChange={(e) => setFormData({ ...formData, weekly_salary: formatCurrencyInput(e.target.value) })}
+                      className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg p-2 pl-7 font-bold focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -290,7 +295,7 @@ export const EmployeesView: React.FC<EmployeesViewProps> = ({ userRole, onRefres
 
               {formData.weekly_salary && formData.reference_days && (
                 <div className="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 p-2.5 rounded-lg border border-emerald-200 dark:border-emerald-800/50 font-medium">
-                  Valor diario derivado: {formatARS(parseFloat(formData.weekly_salary) / parseInt(formData.reference_days, 10))}
+                  Valor diario derivado: {formatARS(parseCurrencyInput(formData.weekly_salary) / parseInt(formData.reference_days, 10))}
                 </div>
               )}
 

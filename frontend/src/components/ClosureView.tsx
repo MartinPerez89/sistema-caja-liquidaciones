@@ -6,7 +6,9 @@ import {
   getWeekExtractions,
   createExtraction,
   formatARS,
-  getTodayDate
+  getTodayDate,
+  formatCurrencyInput,
+  parseCurrencyInput
 } from '../api';
 import {
   Lock,
@@ -83,7 +85,7 @@ export const ClosureView: React.FC<ClosureViewProps> = ({
     setExtractionForm({
       date: getTodayDate(),
       extraction_type: type,
-      amount: type === 'TOTAL' ? balance.current_cash.toString() : '',
+      amount: type === 'TOTAL' ? formatCurrencyInput(balance.current_cash) : '',
       destination: 'Retiro de utilidades / Caja fuerte',
       notes: type === 'TOTAL' ? 'Extracción total de saldo semanal' : '',
     });
@@ -94,7 +96,7 @@ export const ClosureView: React.FC<ClosureViewProps> = ({
     e.preventDefault();
     if (!currentWeek) return;
 
-    const amountNum = parseFloat(extractionForm.amount);
+    const amountNum = parseCurrencyInput(extractionForm.amount);
     if (extractionForm.extraction_type === 'PARCIAL' && (isNaN(amountNum) || amountNum <= 0)) {
       alert('Ingrese un importe válido para la extracción parcial');
       return;
@@ -349,15 +351,19 @@ export const ClosureView: React.FC<ClosureViewProps> = ({
 
                 <div>
                   <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-1">Importe ($ ARS)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    required
-                    disabled={extractionForm.extraction_type === 'TOTAL'}
-                    value={extractionForm.amount}
-                    onChange={(e) => setExtractionForm({ ...extractionForm, amount: e.target.value })}
-                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg p-2 font-bold focus:ring-2 focus:ring-emerald-500 disabled:bg-slate-100 dark:disabled:bg-slate-800/50"
-                  />
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-slate-400 dark:text-slate-500 font-bold text-xs select-none">$</span>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      required
+                      placeholder="0"
+                      disabled={extractionForm.extraction_type === 'TOTAL'}
+                      value={extractionForm.amount}
+                      onChange={(e) => setExtractionForm({ ...extractionForm, amount: formatCurrencyInput(e.target.value) })}
+                      className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg p-2 pl-7 font-bold focus:ring-2 focus:ring-emerald-500 disabled:bg-slate-100 dark:disabled:bg-slate-800/50"
+                    />
+                  </div>
                 </div>
               </div>
 

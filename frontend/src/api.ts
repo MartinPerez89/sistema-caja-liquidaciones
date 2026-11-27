@@ -139,3 +139,54 @@ export const formatARS = (amount: number | null | undefined): string => {
     maximumFractionDigits: 2,
   }).format(amount);
 };
+
+// Formateador y parser de importes para inputs con puntos de miles (es-AR)
+export const formatCurrencyInput = (val: string | number | null | undefined): string => {
+  if (val === '' || val === null || val === undefined) return '';
+
+  if (typeof val === 'number') {
+    if (isNaN(val)) return '';
+    if (Number.isInteger(val)) {
+      return val.toLocaleString('es-AR');
+    }
+    const parts = val.toFixed(2).split('.');
+    const intPart = parseInt(parts[0], 10).toLocaleString('es-AR');
+    return `${intPart},${parts[1]}`;
+  }
+
+  let str = val.toString().trim();
+  if (!str) return '';
+
+  // Si el usuario presionó punto al final (e.g. desde teclado numérico), tratarlo como coma decimal
+  if (str.endsWith('.')) {
+    str = str.slice(0, -1) + ',';
+  }
+
+  let intPart = '';
+  let decPart: string | null = null;
+
+  if (str.includes(',')) {
+    const parts = str.split(',');
+    intPart = parts[0].replace(/\D/g, '');
+    decPart = parts.slice(1).join('').replace(/\D/g, '').slice(0, 2);
+  } else {
+    intPart = str.replace(/\D/g, '');
+  }
+
+  if (!intPart && decPart === null) return '';
+
+  const formattedInt = intPart ? parseInt(intPart, 10).toLocaleString('es-AR') : '0';
+
+  if (decPart !== null) {
+    return `${formattedInt},${decPart}`;
+  }
+  return formattedInt;
+};
+
+export const parseCurrencyInput = (val: string | number | null | undefined): number => {
+  if (typeof val === 'number') return isNaN(val) ? 0 : val;
+  if (!val) return 0;
+  const clean = val.toString().replace(/\./g, '').replace(',', '.').trim();
+  const num = parseFloat(clean);
+  return isNaN(num) ? 0 : num;
+};
